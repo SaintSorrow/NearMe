@@ -3,10 +3,9 @@ import {
   StyleSheet,
   Text,
   View,
-  TouchableOpacity,
-  Linking
+  TouchableOpacity
 } from 'react-native';
-import { WebBrowser } from 'expo';
+import * as WebBrowser from 'expo-web-browser';
 
 export default class WikipediaArticle extends Component {
   constructor (props) {
@@ -16,9 +15,8 @@ export default class WikipediaArticle extends Component {
     }
   }
 
-  openLink = () => {
-    //Linking.openURL("http://en.wikipedia.org/?curid=" + this.state.page.pageId);
-    WebBrowser.openBrowserAsync("http://en.wikipedia.org/?curid=" + this.state.page.pageId);
+  openLink = async() => {
+    await WebBrowser.openBrowserAsync("http://en.wikipedia.org/?curid=" + this.state.page.pageId);
   }
 
   render () {

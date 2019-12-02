@@ -3,12 +3,14 @@ import {
   StyleSheet, 
   Text, 
   View, 
-  ScrollView 
+  ScrollView,
+  StatusBar 
 } from 'react-native';
 import * as Location from 'expo-location';
 import * as Permissions from 'expo-permissions';
 import WikipediaArticle from './../Components/WikipediaArticle';
 import * as WikiService from './../Services/WikiService';
+import * as OpenCageService from './../Services/OpenCageService';
 
 export default class MainScreen extends Component {
   state = {
@@ -16,6 +18,7 @@ export default class MainScreen extends Component {
     longitude: null,
     latitude: null,
     pages: null,
+    address: null
   };
 
   componentWillMount () {
@@ -32,16 +35,19 @@ export default class MainScreen extends Component {
 
     const location = await Location.getCurrentPositionAsync({});
     const pages = await WikiService.getNearbyPagesAsync(location.coords.latitude, location.coords.longitude);
+    const address = await OpenCageService.getFormatedAddress(location.coords.latitude, location.coords.longitude);
     this.setState({ 
       longitude: location.coords.longitude,
       latitude: location.coords.latitude,
       pages: pages,
+      address: address
      });
   } 
 
   render() {
     return (
       <View style={styles.container}>
+        <CurrentLocation address={this.state.address} latitude={this.state.latitude} longitude={this.state.longitude}/>
         <ScrollView>
           {this.state.pages != null && (this.state.pages.map(page => <WikipediaArticle page={page} key={page.pageId}/>))}
           {this.state.pages == null && (<Text>Loading...</Text>)}
@@ -49,8 +55,15 @@ export default class MainScreen extends Component {
       </View>
     );
   }
-
 }
+
+const CurrentLocation = props => 
+  (
+    <View style={styles.address}>
+      <Text style={styles.addressText}>Latitude: {props.latitude}, Longitude: {props.longitude}</Text>
+      <Text style={styles.addressText}>Address: {props.address}</Text>
+    </View>
+  )
 
 const styles = StyleSheet.create({
   container: {
@@ -58,10 +71,16 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
     alignItems: 'center',
     justifyContent: 'center',
+    paddingTop: StatusBar.currentHeight
   },
-  paragraph: {
-    margin: 24,
-    fontSize: 18,
-    textAlign: 'right',
+  addressText: {
+    color: '#F0EDF6'
   },
+  address: {
+    paddingLeft: 10,
+    paddingRight: 10,
+    borderWidth: 5,
+    borderColor: '#694fad',
+    backgroundColor: '#694fad'
+  }
 });

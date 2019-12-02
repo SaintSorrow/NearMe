@@ -25,7 +25,9 @@ export async function getNearbyPagesAsync(latitude, longitude) {
       let newPage = {
         title: item.title,
         pageId: item.pageid,
-        distance: item.dist
+        distance: item.dist,
+        latitude: item.lat,
+        longitude: item.lon
       };
       formattedPages.push(newPage);
     })
