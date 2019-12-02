@@ -8,6 +8,7 @@ import {
 import * as Location from 'expo-location';
 import * as Permissions from 'expo-permissions';
 import WikipediaArticle from './../Components/WikipediaArticle';
+import * as WikiService from './../Services/WikiService';
 
 export default class MainScreen extends Component {
   state = {
@@ -16,43 +17,6 @@ export default class MainScreen extends Component {
     latitude: null,
     pages: null,
   };
-
-  async nearbyPages(latitude, longitude) {
-    let url = "https://en.wikipedia.org/w/api.php";
-    let params = {
-      action: "query",
-      list: "geosearch",
-      gscoord: latitude + "|" + longitude,
-      gsradius: "10000",
-      gslimit: "10",
-      format: "json"
-    }
-  
-    url = url + "?origin=*";
-    Object.keys(params).forEach(function(key){
-      url += "&" + key + "=" + params[key];
-    });
-  
-    try {
-      let respond = await fetch(url);
-      respond = await respond.json();
-      let formattedPages = [];
-      const pages = respond.query.geosearch;
-
-      pages.forEach((item) => {
-        let newPage = {
-          title: item.title,
-          pageId: item.pageid,
-          distance: item.dist
-        };
-        formattedPages.push(newPage);
-      })
-
-      return formattedPages;
-    } catch (error) {
-      console.log(error);
-    }
-  }
 
   componentWillMount () {
     this.getLocationAsync();
@@ -67,7 +31,7 @@ export default class MainScreen extends Component {
     }
 
     const location = await Location.getCurrentPositionAsync({});
-    const pages = await this.nearbyPages(location.coords.latitude, location.coords.longitude);
+    const pages = await WikiService.getNearbyPagesAsync(location.coords.latitude, location.coords.longitude);
     this.setState({ 
       longitude: location.coords.longitude,
       latitude: location.coords.latitude,
