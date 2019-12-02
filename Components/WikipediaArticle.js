@@ -6,6 +6,7 @@ import {
   TouchableOpacity,
   Linking
 } from 'react-native';
+import { WebBrowser } from 'expo';
 
 export default class WikipediaArticle extends Component {
   constructor (props) {
@@ -16,7 +17,8 @@ export default class WikipediaArticle extends Component {
   }
 
   openLink = () => {
-    Linking.openURL("http://en.wikipedia.org/?curid=" + this.state.page.pageId);
+    //Linking.openURL("http://en.wikipedia.org/?curid=" + this.state.page.pageId);
+    WebBrowser.openBrowserAsync("http://en.wikipedia.org/?curid=" + this.state.page.pageId);
   }
 
   render () {
