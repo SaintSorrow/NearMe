@@ -30,7 +30,7 @@ class ReadingListScreen extends Component {
 
 function mapStateToProps(state) {
   return {
-    readingList: state.readingList
+    readingList: state.items.readingList
   }
 }
 
