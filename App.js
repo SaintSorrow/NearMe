@@ -14,6 +14,7 @@ import * as Location from 'expo-location';
 import * as Permissions from 'expo-permissions';
 import * as WikiService from './Services/WikiService';
 import * as OpenCageService from './Services/OpenCageService';
+import ReadingListScreen from './Screens/ReadingListScreen';
 
 const TabNavigator = createMaterialBottomTabNavigator(
   {
@@ -27,7 +28,24 @@ const TabNavigator = createMaterialBottomTabNavigator(
           </View>
         )
       }
+    },
+    ReadingListScreen: {
+      screen: ReadingListScreen,
+      navigationOptions: {
+        tabBarLabel: 'List',
+        tabBarIcon: ({ tintColor }) => (
+          <View>
+            <Icon style={{color: tintColor}} size={25} name={'md-book'}/>
+          </View>
+        )
+      }
     }
+  },
+  {
+    initialRouteName: 'MainScreen',
+    activeColor: '#F0EDF6',
+    inactiveColor: '#3E2465',
+    barStyle: { backgroundColor: '#694FAD'},
   }
 )
 
@@ -61,7 +79,6 @@ const reducer = (state = initialState, action) => {
   switch (action.type) {
     case 'SET_LOCATION':
         const result = getLocation();
-        console.log(result.address);
         return {
           ...state,
           latitude: result.latitude,

@@ -84,7 +84,8 @@ function mapStateToProps(state) {
 function mapDispatchToProps(dispatch) {
   return {
     setLocation: () => dispatch({ type: 'SET_LOCATION'}),
-    showState: () => dispatch({ type: 'SHOW_STATE'})
+    showState: () => dispatch({ type: 'SHOW_STATE'}),
+    addToReadingList: () => dispatch({ type: 'ADD_TO_READING_LIST'})
   }
 }
 
