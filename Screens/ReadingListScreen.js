@@ -18,8 +18,10 @@ class ReadingListScreen extends Component {
     return(
       <View style={styles.container}>
         <ScrollView>
-          {this.props.readingList != null && (this.props.readingList.map(page => <WikipediaArticle page={page} key={page.pageId}/>))}
-          {this.props.readingList == null && (<Text>Reading list is empty</Text>)}
+          {this.props.readingList != null && 
+            (this.props.readingList.map(page => <WikipediaArticle page={page} key={page.pageId} canDelete={true}/>))}
+          {this.props.readingList == null && 
+            (<Text>Reading list is empty</Text>)}
         </ScrollView>
       </View>
     );
@@ -32,13 +34,7 @@ function mapStateToProps(state) {
   }
 }
 
-function mapDispatchToProps(dispatch) {
-  return {
-    removeFromReadingList: () => ({ type: 'REMOVE_FROM_READING'})
-  }
-}
-
-export default connect(mapStateToProps, mapDispatchToProps)(ReadingListScreen);
+export default connect(mapStateToProps)(ReadingListScreen);
 
 const styles = StyleSheet.create({
   container: {

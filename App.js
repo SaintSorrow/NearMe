@@ -12,6 +12,8 @@ import { Provider } from 'react-redux';
 import ReadingListScreen from './Screens/ReadingListScreen';
 import configureStore from './Redux/Store/configureStore';
 
+let store = configureStore();
+
 const TabNavigator = createMaterialBottomTabNavigator(
   {
     MainScreen: {
@@ -50,7 +52,7 @@ const AppContainer = createAppContainer(TabNavigator);
 class App extends Component{
   render() {
     return (
-      <Provider store={configureStore}>
+      <Provider store={store}>
         <AppContainer/>
       </Provider>
     )

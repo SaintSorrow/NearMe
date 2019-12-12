@@ -7,8 +7,10 @@ import {
 } from 'react-native';
 import * as WebBrowser from 'expo-web-browser';
 import Icon from 'react-native-vector-icons/Ionicons';
+import { connect } from 'react-redux';
+import { PageActionCreators } from '../Redux/Actions/Pages';
 
-export default class WikipediaArticle extends Component {
+export class WikipediaArticle extends Component {
   constructor (props) {
     super(props);
     this.state = {
@@ -27,12 +29,29 @@ export default class WikipediaArticle extends Component {
           <Text style={styles.text}>{this.state.page.title}</Text>
           <Text style={styles.text}>Distance: {this.state.page.distance}</Text>
         </TouchableOpacity>
-        {this.props.canAdd === true && (<Icon size={25} name={'md-add'}/>)}
-        {this.props.canDelete === true && (<Icon size={25} name={'md-trash'}/>)}
+        {this.props.canAdd === true && (<Icon size={25} name={'md-add'} onPress={() => this.props.addPage(this.state.page)}/>)}
+        {this.props.canDelete === true && (<Icon size={25} name={'md-trash'} onPress={() => this.props.removePage(this.state.page)}/>)}
       </View>
     )
   }
 }
+
+const { addPage, removePage } = PageActionCreators;
+
+function mapDispatchToProps(dispatch) {
+  return {
+    addPage: (page) => dispatch(addPage(page)),
+    removePage: (page) => dispatch(removePage(page))
+  }
+}
+
+function mapStateToProps(state) {
+  return {
+    readingList: state.readingList
+  };
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(WikipediaArticle);
 
 const styles = StyleSheet.create({
   container: {

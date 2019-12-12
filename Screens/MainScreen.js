@@ -12,6 +12,7 @@ import WikipediaArticle from './../Components/WikipediaArticle';
 import * as WikiService from './../Services/WikiService';
 import * as OpenCageService from './../Services/OpenCageService';
 import { connect } from 'react-redux';
+import { PageActionCreators } from '../Redux/Actions/Pages';
 
 export default class MainScreen extends Component {
   constructor(props, context) {
@@ -27,8 +28,6 @@ export default class MainScreen extends Component {
 
   componentWillMount () {
     this.getLocationAsync();
-    //this.props.setLocation();
-    //this.props.showState();
   }
 
   async getLocationAsync() {
@@ -55,8 +54,10 @@ export default class MainScreen extends Component {
       <View style={styles.container}>
         <CurrentLocation address={this.state.address} latitude={this.state.latitude} longitude={this.state.longitude}/>
         <ScrollView>
-          {this.state.pages != null && (this.state.pages.map(page => <WikipediaArticle page={page} key={page.pageId}/>))}
-          {this.state.pages == null && (<Text>Loading...</Text>)}
+          {this.state.pages != null && 
+            (this.state.pages.map(page => <WikipediaArticle page={page} key={page.pageId} canAdd={true}/>))}
+          {this.state.pages == null && 
+            (<Text>Loading...</Text>)}
         </ScrollView>
       </View>
     );
@@ -71,25 +72,21 @@ const CurrentLocation = props =>
     </View>
   )
 
-function mapStateToProps(state) {
-  console.log("mapStateToProps: " + JSON.stringify(state));
-  return {
-    latitude: state.latitude,
-    longitude: state.longitude,
-    pages: state.pages,
-    currentAddress: state.currentAddress
-  }
-}
+const { addPage } = PageActionCreators;
 
 function mapDispatchToProps(dispatch) {
   return {
-    setLocation: () => dispatch({ type: 'SET_LOCATION'}),
-    showState: () => dispatch({ type: 'SHOW_STATE'}),
-    addToReadingList: () => dispatch({ type: 'ADD_TO_READING_LIST'})
+    addPage: (page) => dispatch(addPage(page))
   }
 }
 
-//export default connect(mapStateToProps, mapDispatchToProps)(MainScreen)
+function mapStateToProps(state) {
+  return {
+    readingList: state.readingList
+  };
+}
+
+//export default connect(mapStateToProps, mapDispatchToProps)(MainScreen);
 
 const styles = StyleSheet.create({
   container: {

@@ -7,7 +7,7 @@ const initialState = {
 export function reducer(state = initialState, action) {
   switch (action.type) {
     case PagesActions.ADD_PAGE_TO_LIST:
-      if (state.readingList.filter(page => page.pageId === action.value.pageId).length === 0) {
+      if (state.readingList.filter(page => page.pageId === action.value.pageId).length > 0) {
         return state;
       } else {
         return {
@@ -28,4 +28,4 @@ export function reducer(state = initialState, action) {
   }
 }
 
-export default reducer;
+export default { items: reducer };
