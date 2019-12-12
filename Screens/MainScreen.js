@@ -11,8 +11,12 @@ import * as Permissions from 'expo-permissions';
 import WikipediaArticle from './../Components/WikipediaArticle';
 import * as WikiService from './../Services/WikiService';
 import * as OpenCageService from './../Services/OpenCageService';
+import { connect } from 'react-redux';
 
 export default class MainScreen extends Component {
+  constructor(props, context) {
+    super(props, context);
+  }
   state = {
     errorMessage: null,
     longitude: null,
@@ -23,6 +27,8 @@ export default class MainScreen extends Component {
 
   componentWillMount () {
     this.getLocationAsync();
+    //this.props.setLocation();
+    //this.props.showState();
   }
 
   async getLocationAsync() {
@@ -64,6 +70,25 @@ const CurrentLocation = props =>
       <Text style={styles.addressText}>Address: {props.address}</Text>
     </View>
   )
+
+function mapStateToProps(state) {
+  console.log("mapStateToProps: " + JSON.stringify(state));
+  return {
+    latitude: state.latitude,
+    longitude: state.longitude,
+    pages: state.pages,
+    currentAddress: state.currentAddress
+  }
+}
+
+function mapDispatchToProps(dispatch) {
+  return {
+    setLocation: () => dispatch({ type: 'SET_LOCATION'}),
+    showState: () => dispatch({ type: 'SHOW_STATE'})
+  }
+}
+
+//export default connect(mapStateToProps, mapDispatchToProps)(MainScreen)
 
 const styles = StyleSheet.create({
   container: {

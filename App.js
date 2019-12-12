@@ -8,6 +8,12 @@ import {
 import MainScreen from './Screens/MainScreen';
 import Icon from 'react-native-vector-icons/Ionicons';
 import { createAppContainer } from 'react-navigation';
+import { createStore } from 'redux';
+import { Provider } from 'react-redux';
+import * as Location from 'expo-location';
+import * as Permissions from 'expo-permissions';
+import * as WikiService from './Services/WikiService';
+import * as OpenCageService from './Services/OpenCageService';
 
 const TabNavigator = createMaterialBottomTabNavigator(
   {
@@ -25,5 +31,65 @@ const TabNavigator = createMaterialBottomTabNavigator(
   }
 )
 
-export default createAppContainer(TabNavigator);
+const AppContainer = createAppContainer(TabNavigator);
 
+const initialState = {
+  longitude: null,
+  latitude: null,
+  pages: null,
+  currentAddress: null
+}
+
+async function getLocation() {
+  let { status } = await Permissions.askAsync(Permissions.LOCATION);
+  if (status !== 'granted')
+    return null;
+  
+  const location = await Location.getCurrentPositionAsync({});
+  console.log("lat: " + location.coords.latitude + ", lon: " + location.coords.longitude);
+  const pages = await WikiService.getNearbyPagesAsync(location.coords.latitude, location.coords.longitude);
+  const address = await OpenCageService.getFormatedAddress(location.coords.latitude, location.coords.longitude);
+
+  return {
+    latitude: location.coords.latitude, 
+    longitude: location.coords.longitude, 
+    pages: pages, 
+    address: address};
+}
+
+const reducer = (state = initialState, action) => {
+  switch (action.type) {
+    case 'SET_LOCATION':
+        const result = getLocation();
+        console.log(result.address);
+        return {
+          ...state,
+          latitude: result.latitude,
+          longitude: result.longitude,
+          pages: result.pages,
+          currentAddress: result.address,
+          text: "Some text!"
+        };
+    case 'SHOW_STATE':
+      console.log("SHOW STATE");
+      console.log(state);
+      console.log("AFTER SHOW STATE");
+      return state;
+    default: 
+      return state;
+  }
+}
+
+const store = createStore(reducer);
+
+class App extends Component{
+  render() {
+    return (
+      <Provider store={store}>
+        <AppContainer/>
+      </Provider>
+    )
+  }
+}
+
+export default App;

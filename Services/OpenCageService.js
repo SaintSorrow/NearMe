@@ -4,8 +4,6 @@ export async function getFormatedAddress(latitude, longitude) {
   const apiKey = "02870f19e4934830b32442fcc491b6b9"; 
   const url = "https://api.opencagedata.com/geocode/v1/json?q=" + coordinates + "&key=" + apiKey;
 
-  console.log("URL: " + url);
-
   try {
     let respond = await fetch(url);
     respond = await respond.json();
