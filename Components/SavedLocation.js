@@ -18,13 +18,18 @@ export class SavedLocation extends Component {
     }
   }
 
+
+
   render() {
     return (
       <View style={styles.container}>
-        <TouchableOpacity>
+        <TouchableOpacity onPress={() => this.props.navigation.navigate('MainScreen')}>
           <Text style={styles.text}>{this.state.location.address}</Text>
         </TouchableOpacity>
-        <Icon size={25} name={'md-trash'} onPress={() => this.props.removeLocation(this.state.location)}/>
+        <Icon style={styles.icon}
+          size={25} 
+          name={'md-trash'} 
+          onPress={() => this.props.removeLocation(this.state.location)}/>
       </View>
     )
   }
@@ -55,10 +60,17 @@ const styles = StyleSheet.create({
     borderWidth: 2,
     paddingTop: 5,
     paddingBottom: 5,
-    flexDirection: 'column'
+    flexDirection: 'column',
+    width: Dimensions.get('window').width,
+    height: 100
   },
   text: {
     textAlign: 'center',
-    fontSize: 16
+    fontSize: 16,
+    width: (Dimensions.get('window').width - 80)
+  },
+  icon: {
+    position: 'absolute',
+    left: 20
   }
 })

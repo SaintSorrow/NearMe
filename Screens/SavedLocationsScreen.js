@@ -4,7 +4,10 @@ import {
   StyleSheet,
   StatusBar,
   TouchableOpacity,
-  Text
+  Text,
+  Button,
+  ScrollView,
+  Dimensions
 } from 'react-native';
 import * as Location from 'expo-location';
 import * as Permissions from 'expo-permissions';
@@ -12,6 +15,7 @@ import { connect } from 'react-redux';
 import { LocationActionCreators } from '../Redux/Actions/Locations';
 import * as OpenCageService from './../Services/OpenCageService';
 import SavedLocation from '../Components/SavedLocation';
+//import { Button } from 'react-native-paper';
 
 export class SavedLocationsScreen extends Component {
   constructor(props, context) {
@@ -34,19 +38,24 @@ export class SavedLocationsScreen extends Component {
     }
   }
 
+  componentDidMount() {
+    console.log("SavedLocationsScreen, statusbar.currentHeight: " + StatusBar.currentHeight)
+  }
 
   render () {
     return (
       <View style={styles.container}>
         <TouchableOpacity onPress={() => this.addCurrentLocation(this.props)}>
-          <Text>
+          <Text style={styles.text}>
             Add Current Location
           </Text>
         </TouchableOpacity>
-        {this.props.savedLocations.length === 0 && 
-          (<Text>No saved locations!</Text>)}
-        {this.props.savedLocations.length > 0 && 
-          (this.props.savedLocations.map(loc => <SavedLocation location={loc} key={loc.address}/>))}
+        <ScrollView>
+          {this.props.savedLocations.length === 0 && 
+            (<Text>No saved locations!</Text>)}
+          {this.props.savedLocations.length > 0 && 
+            (this.props.savedLocations.map(loc => <SavedLocation location={loc} key={loc.address} navigation={this.props.navigation}/>))}
+        </ScrollView>
       </View>
     );
   }
@@ -75,5 +84,14 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     paddingTop: StatusBar.currentHeight
-  }  
+  },
+  text: {
+    fontSize: 16,
+    textAlign: 'center',
+    textAlignVertical: 'center',
+    width: Dimensions.get('window').width,
+    height: 50,
+    backgroundColor: '#694fad',
+    color: '#F0EDF6'
+  } 
 });

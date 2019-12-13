@@ -78,6 +78,7 @@ const styles = StyleSheet.create({
   text: {
     textAlign: 'center',
     fontSize: 16,
+    width: (Dimensions.get('window').width - 80)
   },
   icon: {
     position: 'absolute',

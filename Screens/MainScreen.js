@@ -5,7 +5,7 @@ import {
   View, 
   ScrollView,
   StatusBar,
-  AsyncStorage 
+  Dimensions 
 } from 'react-native';
 import * as Location from 'expo-location';
 import * as Permissions from 'expo-permissions';
@@ -29,18 +29,21 @@ export default class MainScreen extends Component {
   };
 
   componentWillMount () {
-    this.getLocationAsync();
+    if (this.state.getLocationFromOutside == null) {
+      this.getLocationAsync();
+    } else {
+
+    }
+    
     //AsyncStorage.clear();
+  }
+
+  componentDidMount() {
+    console.log("MAIN SCREEN| StatusBar.currentHeight: " + StatusBar.currentHeight);
   }
 
   async getLocationAsync() {
     let { status } = await Permissions.askAsync(Permissions.LOCATION);
-    if (status !== 'granted') {
-      this.setState({
-        errorMessage: 'Permission to access location was denied',
-      });
-    }
-
     const location = await Location.getCurrentPositionAsync({});
     const pages = await WikiService.getNearbyPagesAsync(location.coords.latitude, location.coords.longitude);
     const address = await OpenCageService.getFormatedAddress(location.coords.latitude, location.coords.longitude);
@@ -107,6 +110,7 @@ const styles = StyleSheet.create({
     paddingRight: 10,
     borderWidth: 5,
     borderColor: '#694fad',
-    backgroundColor: '#694fad'
+    backgroundColor: '#694fad',
+    width: Dimensions.get('window').width
   }
 });
