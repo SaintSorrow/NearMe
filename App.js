@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
 import {  
-  View
+  View,
+  ActivityIndicator,
+  StyleSheet
 } from 'react-native';
 import { 
   createMaterialBottomTabNavigator 
@@ -10,9 +12,9 @@ import Icon from 'react-native-vector-icons/Ionicons';
 import { createAppContainer } from 'react-navigation';
 import { Provider } from 'react-redux';
 import ReadingListScreen from './Screens/ReadingListScreen';
-import configureStore from './Redux/Store/configureStore';
-
-let store = configureStore();
+import { store, persistor} from './Redux/Store/configureStore';
+import SavedLocationsScreen from './Screens/SavedLocationsScreen';
+import { PersistGate } from 'redux-persist/integration/react';
 
 const TabNavigator = createMaterialBottomTabNavigator(
   {
@@ -37,6 +39,17 @@ const TabNavigator = createMaterialBottomTabNavigator(
           </View>
         )
       }
+    },
+    SavedLocationsScreen: {
+      screen: SavedLocationsScreen,
+      navigationOptions: {
+        tabBarLabel: 'Locations',
+        tabBarIcon: ({ tintColor }) => (
+          <View>
+            <Icon style={{ color: tintColor }} size={25} name={'md-locate'}/>
+          </View>
+        )
+      }
     }
   },
   {
@@ -50,13 +63,31 @@ const TabNavigator = createMaterialBottomTabNavigator(
 const AppContainer = createAppContainer(TabNavigator);
 
 class App extends Component{
+  renderLoading = () => (
+    <View style={styles.container}>
+      <ActivityIndicator size="large"/>
+    </View>
+  );
+
   render() {
     return (
       <Provider store={store}>
-        <AppContainer/>
+        <PersistGate persistor={persistor} loading={this.renderLoading()}> 
+          <AppContainer/>
+        </PersistGate>
       </Provider>
     )
   }
 }
 
 export default App;
+
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: '#fff',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+});

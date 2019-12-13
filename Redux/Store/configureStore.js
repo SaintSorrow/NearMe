@@ -1,5 +1,7 @@
 import { createStore, applyMiddleware } from 'redux';
 import RootReducer from '../Reducers/Index';
+import { persistStore, persistReducer } from 'redux-persist';
+import { AsyncStorage } from 'react-native';
 
 const logger = store => next => action => {
   console.log('dispatching', action)
@@ -8,10 +10,15 @@ const logger = store => next => action => {
   return result
 }
 
+const persistConfig = {
+  key: 'root',
+  storage: AsyncStorage
+}
+
 let middleware = [logger];
 
-const baseStore = createStore(RootReducer, applyMiddleware(...middleware));
+const persistedReducer = persistReducer(persistConfig, RootReducer);
 
-export default initialState => {
-  return baseStore;
-}
+export const store = createStore(persistedReducer, undefined, applyMiddleware(...middleware));
+
+export const persistor = persistStore(store);

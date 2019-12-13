@@ -9,7 +9,7 @@ import {
 } from 'react-native';
 import WikipediaArticle from './../Components/WikipediaArticle';
 
-class ReadingListScreen extends Component {
+export class ReadingListScreen extends Component {
   constructor(props, context) {
     super(props, context);
   }
@@ -18,9 +18,9 @@ class ReadingListScreen extends Component {
     return(
       <View style={styles.container}>
         <ScrollView>
-          {this.props.readingList != null && 
+          {this.props.readingList.length > 0 && 
             (this.props.readingList.map(page => <WikipediaArticle page={page} key={page.pageId} canDelete={true}/>))}
-          {this.props.readingList == null && 
+          {this.props.readingList.length === 0 && 
             (<Text>Reading list is empty</Text>)}
         </ScrollView>
       </View>

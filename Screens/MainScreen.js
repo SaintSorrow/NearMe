@@ -23,7 +23,8 @@ export default class MainScreen extends Component {
     longitude: null,
     latitude: null,
     pages: null,
-    address: null
+    address: null,
+    getLocationFromOutside: this.props.getLocationFromOutside
   };
 
   componentWillMount () {
