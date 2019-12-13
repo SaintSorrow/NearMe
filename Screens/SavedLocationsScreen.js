@@ -19,6 +19,8 @@ export default class SavedLocationsScreen extends Component {
   }
 }
 
+
+
 const styles = StyleSheet.create({
   container: {
     flex: 1,
