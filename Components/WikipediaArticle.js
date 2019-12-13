@@ -3,7 +3,8 @@ import {
   StyleSheet,
   Text,
   View,
-  TouchableOpacity
+  TouchableOpacity,
+  Dimensions
 } from 'react-native';
 import * as WebBrowser from 'expo-web-browser';
 import Icon from 'react-native-vector-icons/Ionicons';
@@ -29,8 +30,16 @@ export class WikipediaArticle extends Component {
           <Text style={styles.text}>{this.state.page.title}</Text>
           <Text style={styles.text}>Distance: {this.state.page.distance}</Text>
         </TouchableOpacity>
-        {this.props.canAdd === true && (<Icon size={25} name={'md-add'} onPress={() => this.props.addPage(this.state.page)}/>)}
-        {this.props.canDelete === true && (<Icon size={25} name={'md-trash'} onPress={() => this.props.removePage(this.state.page)}/>)}
+        {this.props.canAdd === true && 
+          (<Icon style={styles.icon} 
+                  size={25} 
+                  name={'md-add'} 
+                  onPress={() => this.props.addPage(this.state.page)}/>)}
+        {this.props.canDelete === true && 
+          (<Icon style={styles.icon}
+                  size={25} 
+                  name={'md-trash'} 
+                  onPress={() => this.props.removePage(this.state.page)}/>)}
       </View>
     )
   }
@@ -47,7 +56,7 @@ function mapDispatchToProps(dispatch) {
 
 function mapStateToProps(state) {
   return {
-    readingList: state.readingList
+    readingList: state.items.readingList
   };
 }
 
@@ -62,9 +71,16 @@ const styles = StyleSheet.create({
     borderWidth: 2,
     paddingTop: 5,
     paddingBottom: 5,
+    width: Dimensions.get('window').width,
+    height: 100,
+    flexDirection: 'row'
   },
   text: {
     textAlign: 'center',
     fontSize: 16,
+  },
+  icon: {
+    position: 'absolute',
+    left: 20
   }
 })

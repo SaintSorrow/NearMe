@@ -4,7 +4,8 @@ import {
   Text, 
   View, 
   ScrollView,
-  StatusBar 
+  StatusBar,
+  AsyncStorage 
 } from 'react-native';
 import * as Location from 'expo-location';
 import * as Permissions from 'expo-permissions';
@@ -29,6 +30,7 @@ export default class MainScreen extends Component {
 
   componentWillMount () {
     this.getLocationAsync();
+    //AsyncStorage.clear();
   }
 
   async getLocationAsync() {

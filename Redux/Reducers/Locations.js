@@ -22,7 +22,7 @@ export function locationsReducer(state = initialState, action) {
 
       case LocationActions.REMOVE_LOCATION:
         const filteredList = state.savedLocations.filter(
-          loc => loc.latitude === action.value.latitude && loc.longitude === action.value.longitude);
+          loc => loc.latitude !== action.value.latitude && loc.longitude !== action.value.longitude);
 
         return {
           ...state,
@@ -34,4 +34,4 @@ export function locationsReducer(state = initialState, action) {
   }
 }
 
-export default { item: locationsReducer};
+export default { locations: locationsReducer};
