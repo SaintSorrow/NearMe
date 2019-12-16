@@ -84,10 +84,12 @@ export class MainScreen extends Component {
           longitude={this.props.globalLocation.longitude}
         />
         <ScrollView>
-          {this.state.pages != null && 
-            (this.state.pages.map(page => <WikipediaArticle page={page} key={page.pageId} canAdd={true}/>))}
-          {this.state.pages == null && 
-            (<Text>Loading...</Text>)}
+          {(this.state.pages.map(page => 
+          <WikipediaArticle 
+            page={page} 
+            key={page.pageId} 
+            canAdd={true}
+          />))}
         </ScrollView>
       </View>
     );

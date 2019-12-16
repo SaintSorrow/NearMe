@@ -9,7 +9,6 @@ import {
   Dimensions
 } from 'react-native';
 import * as Location from 'expo-location';
-import * as Permissions from 'expo-permissions';
 import { connect } from 'react-redux';
 import { LocationActionCreators } from '../Redux/Actions/Locations';
 import * as OpenCageService from './../Services/OpenCageService';
@@ -23,7 +22,6 @@ export class SavedLocationsScreen extends Component {
 
   async addCurrentLocation() {
     try {
-      let { status } = await Permissions.askAsync(Permissions.LOCATION);
       const location = await Location.getCurrentPositionAsync({});
       const address = await OpenCageService.getFormatedAddress(location.coords.latitude, location.coords.longitude);
       const savedLocation = {
@@ -62,7 +60,7 @@ export class SavedLocationsScreen extends Component {
   }
 }
 
-const { addLocation, removeLocation } = LocationActionCreators;
+const { addLocation } = LocationActionCreators;
 
 function mapDispatchToProps(dispatch) {
   return {
