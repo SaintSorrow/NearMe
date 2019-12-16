@@ -5,7 +5,6 @@ import {
   StatusBar,
   TouchableOpacity,
   Text,
-  Button,
   ScrollView,
   Dimensions
 } from 'react-native';
@@ -15,7 +14,7 @@ import { connect } from 'react-redux';
 import { LocationActionCreators } from '../Redux/Actions/Locations';
 import * as OpenCageService from './../Services/OpenCageService';
 import SavedLocation from '../Components/SavedLocation';
-//import { Button } from 'react-native-paper';
+import LocationFromAddress from '../Components/LocationFromAddress';
 
 export class SavedLocationsScreen extends Component {
   constructor(props, context) {
@@ -50,6 +49,7 @@ export class SavedLocationsScreen extends Component {
             Add Current Location
           </Text>
         </TouchableOpacity>
+        <LocationFromAddress/>
         <ScrollView>
           {this.props.savedLocations.length === 0 && 
             (<Text>No saved locations!</Text>)}
