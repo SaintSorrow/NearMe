@@ -18,12 +18,15 @@ export class SavedLocation extends Component {
     }
   }
 
-
+  goToMainScreen() {
+    this.props.setGlobalLocation(this.state.location);
+    this.props.navigation.navigate('MainScreen');
+  }
 
   render() {
     return (
       <View style={styles.container}>
-        <TouchableOpacity onPress={() => this.props.navigation.navigate('MainScreen')}>
+        <TouchableOpacity onPress={() => this.goToMainScreen()}>
           <Text style={styles.text}>{this.state.location.address}</Text>
         </TouchableOpacity>
         <Icon style={styles.icon}
@@ -35,17 +38,19 @@ export class SavedLocation extends Component {
   }
 }
  
-const { removeLocation } = LocationActionCreators;
+const { removeLocation, setGlobalLocation } = LocationActionCreators;
 
 function mapDispatchToProps(dispatch) {
   return {
-    removeLocation: (location) => dispatch(removeLocation(location))
+    removeLocation: (location) => dispatch(removeLocation(location)),
+    setGlobalLocation: (location) => dispatch(setGlobalLocation(location))
   }
 }
 
 function mapStateToProps(state) {
   return {
-    savedLocations: state.locations.savedLocations
+    savedLocations: state.locations.savedLocations,
+    globalLocation: state.locations.globalLocation
   }
 }
 

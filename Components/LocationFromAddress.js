@@ -21,6 +21,10 @@ export class LocationFromAddress extends Component {
     if (location != null) {
       this.props.addLocation(location);
     }
+
+    this.setState({
+      text: ""
+    })
   }
 
   render () {
@@ -56,7 +60,6 @@ export default connect(mapStateToProps, mapDispatchToProps)(LocationFromAddress)
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
     backgroundColor: '#694fad',
     alignItems: 'center',
     justifyContent: 'center',

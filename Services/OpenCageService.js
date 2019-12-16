@@ -6,11 +6,23 @@ const keyNotation = "&key=";
 
 function getAddressFromRespond(respond) {
   const components = respond.results[0].components;
-  let address = components.country + ", ";
-  address += components.county + ", ";
-  address += components.city + ", ";
-  address += components.road + ", ";
-  address += components.house_number;
+  let address = components.country;
+  if (components.county) {
+    address += " ," + components.county;
+  }
+  
+  if (components.city) {
+    address += " ," + components.city;
+  }
+  
+  if (components.road) {
+    address += " ," + components.road;
+  }
+
+  if (components.house_number) {
+    address += " ," + components.house_number;
+  }
+  
 
   return address;
 }
@@ -41,11 +53,11 @@ export async function getLocationByAddress(address) {
     const location = {
       address: address,
       latitude: geometry.lat,
-      longitude: geometry.lon
+      longitude: geometry.lng
     }
 
     return location;
   } catch (error) {
-    console.error(error);
+    console.log(error);
   }
 }

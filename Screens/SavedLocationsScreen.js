@@ -21,7 +21,7 @@ export class SavedLocationsScreen extends Component {
     super(props, context);
   }
 
-  async addCurrentLocation(props) {
+  async addCurrentLocation() {
     try {
       let { status } = await Permissions.askAsync(Permissions.LOCATION);
       const location = await Location.getCurrentPositionAsync({});
@@ -37,14 +37,10 @@ export class SavedLocationsScreen extends Component {
     }
   }
 
-  componentDidMount() {
-    console.log("SavedLocationsScreen, statusbar.currentHeight: " + StatusBar.currentHeight)
-  }
-
   render () {
     return (
       <View style={styles.container}>
-        <TouchableOpacity onPress={() => this.addCurrentLocation(this.props)}>
+        <TouchableOpacity onPress={() => this.addCurrentLocation()}>
           <Text style={styles.text}>
             Add Current Location
           </Text>
@@ -54,7 +50,12 @@ export class SavedLocationsScreen extends Component {
           {this.props.savedLocations.length === 0 && 
             (<Text>No saved locations!</Text>)}
           {this.props.savedLocations.length > 0 && 
-            (this.props.savedLocations.map(loc => <SavedLocation location={loc} key={loc.address} navigation={this.props.navigation}/>))}
+            (this.props.savedLocations.map(loc => 
+              <SavedLocation 
+                location={loc} 
+                key={loc.address} 
+                navigation={this.props.navigation}/>))
+          }
         </ScrollView>
       </View>
     );
