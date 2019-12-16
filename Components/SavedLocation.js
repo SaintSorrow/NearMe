@@ -8,6 +8,7 @@ import {
 } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
 import { LocationActionCreators } from '../Redux/Actions/Locations';
+import { PageActionCreators} from '../Redux/Actions/Pages';
 import { connect } from 'react-redux';
 
 export class SavedLocation extends Component {
@@ -20,6 +21,7 @@ export class SavedLocation extends Component {
 
   goToMainScreen() {
     this.props.setGlobalLocation(this.state.location);
+    this.props.updatePageDistance(this.state.location);
     this.props.navigation.navigate('MainScreen');
   }
 
@@ -39,11 +41,13 @@ export class SavedLocation extends Component {
 }
  
 const { removeLocation, setGlobalLocation } = LocationActionCreators;
+const { updatePageDistance } = PageActionCreators;
 
 function mapDispatchToProps(dispatch) {
   return {
     removeLocation: (location) => dispatch(removeLocation(location)),
-    setGlobalLocation: (location) => dispatch(setGlobalLocation(location))
+    setGlobalLocation: (location) => dispatch(setGlobalLocation(location)),
+    updatePageDistance: (globalLocation) => dispatch(updatePageDistance(globalLocation))
   }
 }
 

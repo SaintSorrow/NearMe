@@ -1,7 +1,9 @@
 import { LocationActions } from './../Actions/Locations';
 
+
 const initialState = {
-  savedLocations: []
+  savedLocations: [],
+  globalLocation: null,
 }
 
 export function locationsReducer(state = initialState, action) {
@@ -29,6 +31,12 @@ export function locationsReducer(state = initialState, action) {
           savedLocations: filteredList
         };
 
+      case LocationActions.SET_GLOBAL_LOCATION:
+        return {
+          ...state,
+          globalLocation: action.value
+        };
+      
       default:
         return state;
   }

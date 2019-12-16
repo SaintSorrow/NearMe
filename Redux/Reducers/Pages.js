@@ -1,4 +1,5 @@
 import { PagesActions } from './../Actions/Pages';
+import { updateReadingList } from '../../Services/Haversine';
 
 const initialState = {
   readingList: []
@@ -21,6 +22,14 @@ export function pagesReducer(state = initialState, action) {
       return {
         ...state,
         readingList: filteredList
+      };
+
+    case PagesActions.UPDATE_PAGE_DISTANCE:
+      const updatedList = updateReadingList(state.readingList, action.value);
+
+      return {
+        ...state,
+        readingList: updatedList
       };
 
     default:

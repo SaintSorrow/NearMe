@@ -8,57 +8,81 @@ import {
   Dimensions 
 } from 'react-native';
 import * as Location from 'expo-location';
-import * as Permissions from 'expo-permissions';
 import WikipediaArticle from './../Components/WikipediaArticle';
 import * as WikiService from './../Services/WikiService';
 import * as OpenCageService from './../Services/OpenCageService';
 import { connect } from 'react-redux';
+import { LocationActionCreators } from '../Redux/Actions/Locations';
 import { PageActionCreators } from '../Redux/Actions/Pages';
 
-export default class MainScreen extends Component {
+export class MainScreen extends Component {
   constructor(props, context) {
     super(props, context);
   }
   state = {
-    errorMessage: null,
-    longitude: null,
-    latitude: null,
     pages: null,
-    address: null,
-    getLocationFromOutside: this.props.getLocationFromOutside
+    loading: true,
   };
 
-  componentWillMount () {
-    if (this.state.getLocationFromOutside == null) {
-      this.getLocationAsync();
-    } else {
-
+  async componentDidMount() {
+    try {
+      if (this.props.globalLocation == null) {
+        await this.setGlobalLocationAsync();
+      }
+  
+      await this.setPagesAsync();
+    } catch (error) {
+      console.log(error);
     }
-    
-    //AsyncStorage.clear();
   }
 
-  componentDidMount() {
-    console.log("MAIN SCREEN| StatusBar.currentHeight: " + StatusBar.currentHeight);
+  async componentDidUpdate(previousProps) {
+    if (previousProps.globalLocation !== this.props.globalLocation) {
+      await this.setPagesAsync();
+    }
   }
 
-  async getLocationAsync() {
-    let { status } = await Permissions.askAsync(Permissions.LOCATION);
+  async setGlobalLocationAsync() {
     const location = await Location.getCurrentPositionAsync({});
-    const pages = await WikiService.getNearbyPagesAsync(location.coords.latitude, location.coords.longitude);
     const address = await OpenCageService.getFormatedAddress(location.coords.latitude, location.coords.longitude);
-    this.setState({ 
-      longitude: location.coords.longitude,
+    const globalLocation = {
+      address: address,
       latitude: location.coords.latitude,
+      longitude: location.coords.longitude
+    };
+
+    this.props.setGlobalLocation(globalLocation);
+    this.props.updatePageDistance(globalLocation);
+  }
+
+  async setPagesAsync() {
+    const location = this.props.globalLocation;
+    const pages = await WikiService.getNearbyPagesAsync(location.latitude, location.longitude);
+
+    this.setState({
       pages: pages,
-      address: address
-     });
-  } 
+      loading: false
+    })
+  }
 
   render() {
+    if (this.state.loading === true) {
+      return (
+        <View style={styles.container}>
+          <Text>
+            Loading...
+          </Text>
+        </View>
+      )
+    }
+
     return (
       <View style={styles.container}>
-        <CurrentLocation address={this.state.address} latitude={this.state.latitude} longitude={this.state.longitude}/>
+        <CurrentLocation 
+          address={this.props.globalLocation.address} 
+          latitude={this.props.globalLocation.latitude} 
+          longitude={this.props.globalLocation.longitude}
+        />
         <ScrollView>
           {this.state.pages != null && 
             (this.state.pages.map(page => <WikipediaArticle page={page} key={page.pageId} canAdd={true}/>))}
@@ -78,21 +102,23 @@ const CurrentLocation = props =>
     </View>
   )
 
-const { addPage } = PageActionCreators;
+const { setGlobalLocation } = LocationActionCreators;
+const { updatePageDistance } = PageActionCreators;
 
 function mapDispatchToProps(dispatch) {
   return {
-    addPage: (page) => dispatch(addPage(page))
+    setGlobalLocation: (location) => dispatch(setGlobalLocation(location)),
+    updatePageDistance: (globalLocation) => dispatch(updatePageDistance(globalLocation))
   }
 }
 
 function mapStateToProps(state) {
   return {
-    readingList: state.readingList
+    globalLocation: state.locations.globalLocation
   };
 }
 
-//export default connect(mapStateToProps, mapDispatchToProps)(MainScreen);
+export default connect(mapStateToProps, mapDispatchToProps)(MainScreen);
 
 const styles = StyleSheet.create({
   container: {

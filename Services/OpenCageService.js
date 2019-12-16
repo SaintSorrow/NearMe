@@ -7,20 +7,22 @@ const keyNotation = "&key=";
 function getAddressFromRespond(respond) {
   const components = respond.results[0].components;
   let address = components.country;
+  const comma = ", ";
+
   if (components.county) {
-    address += " ," + components.county;
+    address += comma + components.county;
   }
   
   if (components.city) {
-    address += " ," + components.city;
+    address += comma + components.city;
   }
   
   if (components.road) {
-    address += " ," + components.road;
+    address += comma + components.road;
   }
 
   if (components.house_number) {
-    address += " ," + components.house_number;
+    address += comma + components.house_number;
   }
   
 
